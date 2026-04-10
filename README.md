@@ -1,4 +1,4 @@
-# 🧠 TurboQuant: Preserving DeepSeek-R1's Reasoning Under 4-Bit Compression
+# TurboQuant: Preserving DeepSeek-R1's Reasoning Under 4-Bit Compression
 
 **Why 4-bit quantization breaks reasoning in DeepSeek-R1 and how to fix it with Unbiased Estimators.**
 

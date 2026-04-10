@@ -49,6 +49,26 @@ Maintains the necessary signal fidelity to close the relationship tree, accurate
 
 ## 🚀 How to Run Locally
 
+### 1. Prerequisites
+Ensure you have the following weights available in the root directory. If you are using different paths, update the `MODELS` dictionary in `scripts/validation_suite.py` and `scripts/test_r1_intelligence.py`.
+
+*   `./R1-1.5B-Raw`: The original FP16 DeepSeek-R1 weights (converted to MLX format).
+*   `./R1-1.5B-Official-4bit`: The standard 4-bit AWQ weights for comparison.
+
+### 2. Execution
 You must execute scripts from the root directory to ensure paths to data folders connect correctly.
-1. `python scripts/quantize_comparison.py` to generate the mathematically reconstructed models.
+1. `python scripts/quantize_comparison.py` to generate the mathematically reconstructed models (`./R1-1.5B-Turbo-4bit`, etc.).
 2. `python scripts/validation_suite.py` or `python scripts/test_r1_intelligence.py` to run the automated benchmarking monitors.
+
+---
+
+## 🏎️ The Memory vs. Compute Paradox: Weight vs. KV-Cache
+
+A critical architectural insight from this implementation is the inherent constraint of the **Dense Random Rotation Matrix ($\Pi$)**.
+
+*   **The Mathematical Sanctity of $\Pi$:** The near-optimal Shannon distortion guarantees in this suite rely on perfectly isotropic rotation (using matrices generated via QR Decomposition). This ensures coordinates converge exactly to $\mathcal{N}(0,1)$, allowing the 1D Lloyd-Max solver to be theoretically perfect.
+*   **The Hardware Reality:** If we replaced the $O(N^2)$ dense rotation with a structured $O(N \log N)$ transform (like FWHT used in QuaRot), the Gaussian assumptions fail, and the TurboQuant algorithm breaks. However, because $\Pi$ is dense, applying it during weight inference requires as much memory bandwidth as streaming an uncompressed FP16 model.
+*   **The Resolution:** This demonstrates why TurboQuant is the superior choice for **KV-Cache Quantization**, where compressing millions of tokens in RAM is the bottleneck, and the $O(N^2)$ compute cost per token is negligible compared to the memory savings.
+
+---
+*Developed for the MLX / Apple Silicon Community.*

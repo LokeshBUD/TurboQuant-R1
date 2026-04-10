@@ -1,0 +1,32 @@
+# Python Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+.env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Model Weights & Data
+*.safetensors
+*.bin
+*.pt
+*.h5
+
+# Local generated model directories
+R1-1.5B-*/
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
